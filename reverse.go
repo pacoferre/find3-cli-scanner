@@ -146,7 +146,7 @@ func PromiscuousMode(on bool) {
 		sequence := []string{"airmon-ng start wlan0"}
 		for _, command := range sequence {
 			s, t := RunCommand(60*time.Second, command)
-			time.Sleep(1 * time.Second)
+			time.Sleep(2 * time.Second)
 			if len(s) > 0 {
 				log.Debugf("out: %s", s)
 			}
@@ -166,6 +166,6 @@ func PromiscuousMode(on bool) {
 				log.Debugf("err: %s", t)
 			}
 		}
-		time.Sleep(5 * time.Second)
+		time.Sleep(8 * time.Second)
 	}
 }
