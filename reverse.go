@@ -166,6 +166,6 @@ func PromiscuousMode(on bool) {
 				log.Debugf("err: %s", t)
 			}
 		}
-		time.Sleep(2 * time.Second)
+		time.Sleep(5 * time.Second)
 	}
 }
