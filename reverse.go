@@ -5,7 +5,6 @@ package main
 import (
 	"errors"
 	"sort"
-	"strings"
 	"time"
 
 	log "github.com/cihub/seelog"
@@ -142,21 +141,31 @@ func ReverseScan(scanTime time.Duration) (sensors models.SensorData, err error) 
 }
 
 func PromiscuousMode(on bool) {
-	sequence := []string{"ifconfig XX down", "iwconfig XX mode YY", "ifconfig XX up"}
-	for _, command := range sequence {
-		commandString := strings.Replace(command, "XX", wifiInterface, 1)
-		if on {
-			commandString = strings.Replace(commandString, "YY", "monitor", 1)
-		} else {
-			commandString = strings.Replace(commandString, "YY", "managed", 1)
+
+	if on {
+		sequence := []string{"airmon-ng start wlan0"}
+		for _, command := range sequence {
+			s, t := RunCommand(60*time.Second, commandString)
+			time.Sleep(1 * time.Second)
+			if len(s) > 0 {
+				log.Debugf("out: %s", s)
+			}
+			if len(t) > 0 {
+				log.Debugf("err: %s", t)
+			}
 		}
-		s, t := RunCommand(60*time.Second, commandString)
-		time.Sleep(1 * time.Second)
-		if len(s) > 0 {
-			log.Debugf("out: %s", s)
+	} else {
+		sequence := []string{"airmon-ng stop wlan0mon", "ifconfig wlan0 up"}
+		for _, command := range sequence {
+			s, t := RunCommand(60*time.Second, commandString)
+			time.Sleep(1 * time.Second)
+			if len(s) > 0 {
+				log.Debugf("out: %s", s)
+			}
+			if len(t) > 0 {
+				log.Debugf("err: %s", t)
+			}
 		}
-		if len(t) > 0 {
-			log.Debugf("err: %s", t)
-		}
+		time.Sleep(2 * time.Second)
 	}
 }
